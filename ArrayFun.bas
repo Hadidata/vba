@@ -1,43 +1,22 @@
 Attribute VB_Name = "ArrayFun"
 'The purpose of this module is to make working with Arrays
 'in VBA easier by providing functions to perform common data
-'manipulation task in arrays that would otherwise be done in VBA
+'manipulation task.
 '---------------------------------------------------------------
 'Reference:
 ' Microsoft Scripting Runtime
 '---------------------------------------------------------------
 'List of Function
-'  Transpose: --- (Done requires Unit Testing)
-'  Distinct:  --- (Done requires Unit Testing)
+'  Transpose:
+'  Distinct:
 '  Append: ---(Under Development)
 '
 '
-' Developed by Hadi Ali ali.hadi071@gmail.com
-'
+' Developer: Hadi Ali
+' Email: ali.hadi071@gmail.com
 '
 Option Explicit
 Option Base 0
-
-'===========================================================
-' Transpose Public Function
-' ----------------------------------------------------------
-' Purpose: To transpose a 2 dimmensional array clockwise
-'          is not limited by the Application.Transpose
-'          ~64,000 row limit
-'
-' Author: Hadi Ali November 2019
-'
-'Parameter(s)
-'-----------
-'varArray: A 2 dimmensional Array
-'-----------------------------------------------------------
-'Returns: A 2 dimmensional Array tranposed counterclockwise
-'         if an error occurs then a null value is returned
-'-----------------------------------------------------------
-'Revision History
-'-----------------------------------------------------------
-'20Nov19 HA: Initial Version
-'===========================================================
 
 Public Function Transpose(ByVal varArray As Variant) As Variant
 
@@ -73,26 +52,6 @@ Public Function Transpose(ByVal varArray As Variant) As Variant
       
    
 End Function
-
-'===========================================================
-' RemoveDuplicates Public Function
-' ----------------------------------------------------------
-' Purpose: To remove Duplicates from a 1D or a 2D array
-'
-' Author: Hadi Ali November 2019
-'
-'Parameter(s)
-'-----------
-'varArray: A 2 dimmensional or 1 dimmensional Array
-'-----------------------------------------------------------
-'Returns: A 2 dimmensional or 1 dimmensional Array
-'         without its duplicate
-'         if an error occurs then a null value is returned
-'-----------------------------------------------------------
-'Revision History
-'-----------------------------------------------------------
-'22Nov19 HA: Initial Version
-'===========================================================
 
 Public Function RemoveDuplicates(ByVal varArray As Variant) As Variant
                                     
@@ -197,7 +156,7 @@ End Function
 '-----------------------------------------------------------
 'Revision History
 '-----------------------------------------------------------
-'21Nov19 HA: Initial Version
+'20Nov19 HA: Initial Version
 '===========================================================
 
 Private Function GetDims(ByVal varArray As Variant) As Long
