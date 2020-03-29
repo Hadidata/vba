@@ -8,8 +8,8 @@ Attribute VB_Name = "ArrayFun"
 '---------------------------------------------------------------
 'List of Function
 '  Transpose:
-'  Distinct:
-'  Append: ---(Under Development)
+'  RemoveDuplicates:
+'  Append:
 '
 '
 ' Developer: Hadi Ali
@@ -138,6 +138,131 @@ Public Function RemoveDuplicates(ByVal varArray As Variant) As Variant
    
 End Function
 
+'===========================================================
+' Append Public Function
+' ----------------------------------------------------------
+' Purpose: Merge two 1 or 2 dimmensional arrays into one array
+'
+' Author: Hadi Ali March 2019
+'
+'Parameter(s)
+'-----------
+'varArray1: An Array of 1 or 2 dimmensions
+'varArray2: An Array of 1 or 2 dimmensions
+'lngAppendDim: the dimmension for 2d array to append with
+'-----------------------------------------------------------
+'Returns: A merged array and null if an error occurs
+'
+'-----------------------------------------------------------
+'Revision History
+'-----------------------------------------------------------
+'20Feb20 HA: Initial Version
+'===========================================================
+
+Public Function Append(ByVal varArray1 As Variant, _
+                       ByVal varArray2 As Variant, _
+                       Optional ByVal lngAppendDim As Long = 1) As Variant
+
+   Dim varResult As Variant
+   Dim varAllData As Variant
+   Dim lngrow As Long
+   Dim lngCol As Long
+   Dim lngMaxDim As Long
+   Dim lngIndex As Long
+   Dim lngDims1 As Long
+   Dim lngDims2 As Long
+   
+   'find the number of dimmensions for both arrays and only proced if
+   'they are less then 2 or equal
+   
+   #If debugging Then
+      Debug.Assert (lngAppendDim <= 2)
+   #End If
+   
+   lngDims1 = GetDims(varArray1)
+   lngDims2 = GetDims(varArray2)
+   
+   If lngDims1 = lngDims2 Then
+      'append 1 dimmensional arrays
+      If lngDims1 = 1 And lngDims2 = 1 Then
+         ReDim varAllData(LBound(varArray1) To UBound(varArray1) + UBound(varArray1) + 1)
+            lngIndex = LBound(varAllData)
+            For lngrow = LBound(varArray1) To UBound(varArray1)
+               varAllData(lngIndex) = varArray1(lngrow)
+               lngIndex = lngIndex + 1
+            Next lngrow
+            For lngrow = LBound(varArray2) To UBound(varArray2)
+               varAllData(lngIndex) = varArray2(lngrow)
+               lngIndex = lngIndex + 1
+            Next lngrow
+            varResult = varAllData
+            GoTo FunctionClose
+      ElseIf lngDims1 = 2 And lngDims2 = 2 Then
+         'append 2 dimmensional arrays
+         
+         If lngAppendDim = 1 Then
+            'find the max dimmension
+             lngMaxDim = Application.WorksheetFunction.Max(UBound(varArray1, 2), _
+                     UBound(varArray2, 2))
+                     
+             ReDim varAllData(LBound(varArray1, 1) To UBound(varArray1, 1) + UBound(varArray1, 1) + 1, _
+                              LBound(varArray1) To lngMaxDim)
+             
+             For lngrow = LBound(varArray1, 1) To UBound(varArray1, 1)
+               For lngCol = LBound(varArray1, 2) To UBound(varArray1, 2)
+                  varAllData(lngrow, lngCol) = varArray1(lngrow, lngCol)
+               Next lngCol
+             Next lngrow
+             
+             lngIndex = UBound(varArray1) + 1
+             For lngrow = LBound(varArray2, 1) To UBound(varArray2, 1)
+               For lngCol = LBound(varArray2, 2) To UBound(varArray2, 2)
+                  varAllData(lngIndex, lngCol) = varArray2(lngrow, lngCol)
+               Next lngCol
+               lngIndex = lngIndex + 1
+             Next lngrow
+             
+         ElseIf lngAppendDim = 2 Then
+             lngMaxDim = Application.WorksheetFunction.Max(UBound(varArray1, 1), _
+                     UBound(varArray2, 1))
+             
+             ReDim varAllData(LBound(varArray1) To lngMaxDim, _
+             LBound(varArray1, 2) To UBound(varArray1, 2) + UBound(varArray1, 2) + 1)
+
+             
+             For lngCol = LBound(varArray1, 2) To UBound(varArray1, 2)
+               For lngrow = LBound(varArray1, 1) To UBound(varArray1, 1)
+                  varAllData(lngrow, lngCol) = varArray1(lngrow, lngCol)
+               Next lngrow
+             Next lngCol
+             
+             lngIndex = UBound(varArray1, 2) + 1
+             For lngCol = LBound(varArray2, 2) To UBound(varArray2, 2)
+               For lngrow = LBound(varArray2, 1) To UBound(varArray2, 1)
+                  varAllData(lngrow, lngIndex) = varArray2(lngrow, lngCol)
+               Next lngrow
+               lngIndex = lngIndex + 1
+             Next lngCol
+             
+         Else
+            varResult = ""
+            GoTo FunctionClose
+         End If
+         
+      Else
+         varResult = ""
+         GoTo FunctionClose
+      End If
+   Else
+      varResult = ""
+      GoTo FunctionClose
+   End If
+   varResult = varAllData
+FunctionClose:
+   Append = varResult
+
+End Function
+
 
 ''''''''''''''''''''''''''' Private Functions '''''''''''''''''''''''''''''''''''''''
 '===========================================================
@@ -181,7 +306,6 @@ Private Function GetDims(ByVal varArray As Variant) As Long
 ErrorHandler:
    GetDims = lDims - 1
 End Function
-
 
 'this function coverts a given value into a vba type based on
 'the type integer provided
@@ -283,4 +407,3 @@ Private Function TypeConvert(varValue As Variant, intType As Integer) As Variant
    End Select
 
 End Function
-
